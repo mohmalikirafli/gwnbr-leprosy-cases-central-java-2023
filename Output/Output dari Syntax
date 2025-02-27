@@ -1,0 +1,577 @@
+> cat("=================== UJI ASUMSI SPASIAL ====================\n")
+=================== UJI ASUMSI SPASIAL ====================
+> library(base)
+> library(zoo)
+> library(lmtest)
+> library(spgwr)
+> library(ape)
+> library(readxl)
+> 
+> # Read the Excel file
+> data <- read_excel("D://02_Work/06_Portfolio/04_GWNBR Kusta/Data Kusta.xlsx")
+> View(data)
+> 
+> D=dist(cbind(data$Lat,data$Long))
+> min(D)
+[1] 0.06906815
+> max(D)
+[1] 2.546277
+> library("csv")
+> library("ape")
+> library("lmtest")
+> skripsi=function()
++ {
++   data.dist=as.matrix(dist(cbind(data$Long,data$Lat)))
++   data.dist.inv=1/data.dist
++   diag(data.dist.inv)=0
++   data.dist.inv[1:5,1:5]
++   Dependensi=Moran.I(data$Y,data.dist.inv)
++   cat("=========   Dependensi  ==========\n")
++   print(Dependensi)
++   
++   lm.fit=lm(Y~X1+X2+X3+X4+X5,data)
++   anova(lm.fit)
++   summary(lm.fit)
++   Heterogenitas=bptest(lm.fit)
++   cat("========= Heterogenitas ==========\n")
++   print(Heterogenitas)
++   
++ }
+> skripsi()
+=========   Dependensi  ==========
+$observed
+[1] 0.1480932
+
+$expected
+[1] -0.02941176
+
+$sd
+[1] 0.03057422
+
+$p.value
+[1] 6.409429e-09
+
+========= Heterogenitas ==========
+
+	studentized Breusch-Pagan test
+
+data:  lm.fit
+BP = 14.436, df = 5, p-value = 0.01306
+
+> #Statistika Deskriptif
+> cat("Statistika Deskriptif(Y)\n")
+Statistika Deskriptif(Y)
+> summary(data$Y)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00   13.00   20.00   44.31   40.50  281.00 
+> cat("Statistika Deskriptif(X1)\n")
+Statistika Deskriptif(X1)
+> summary(data$X1)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    461     925    1172    2066    1756   11277 
+> cat("Statistika Deskriptif(X2)\n")
+Statistika Deskriptif(X2)
+> summary(data$X2)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   9.52   54.34   65.00   61.15   69.79  100.00 
+> cat("Statistika Deskriptif(X3)\n")
+Statistika Deskriptif(X3)
+> summary(data$X3)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    1.0    85.0   147.0   136.7   185.0   361.0 
+> cat("Statistika Deskriptif(X4)\n")
+Statistika Deskriptif(X4)
+> summary(data$X4)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    7.0   149.0   211.0   371.3   438.5  1436.0 
+> cat("Statistika Deskriptif(X5)\n")
+Statistika Deskriptif(X5)
+> summary(data$X5)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  52739  254914  310339  332478  453387  694134 
+
+
+> library(readxl)
+> library(fields)
+> library(spam)
+> library(viridisLite)
+> library(MASS)
+> bineg = glm.nb(Y~X1+X2+X3+X4+X5, data=data)
+> summary(bineg)
+
+Call:
+glm.nb(formula = Y ~ X1 + X2 + X3 + X4 + X5, data = data, init.theta = 1.49208461, 
+    link = log)
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  6.510e+00  9.267e-01   7.025 2.13e-12 ***
+X1          -3.356e-04  8.592e-05  -3.906 9.38e-05 ***
+X2          -2.219e-02  9.660e-03  -2.297  0.02164 *  
+X3          -1.340e-02  2.910e-03  -4.606 4.11e-06 ***
+X4          -4.779e-04  4.921e-04  -0.971  0.33152    
+X5           2.926e-06  1.078e-06   2.713  0.00667 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for Negative Binomial(1.4921) family taken to be 1)
+
+    Null deviance: 73.899  on 34  degrees of freedom
+Residual deviance: 37.794  on 29  degrees of freedom
+AIC: 322.9
+
+Number of Fisher Scoring iterations: 1
+
+
+              Theta:  1.492 
+          Std. Err.:  0.353 
+
+ 2 x log-likelihood:  -308.896 
+> 
+> library(MASS)
+> library(car)
+Loading required package: carData
+> pois = glm(Y~X1+X2+X3+X4+X5, family=poisson, data=data)
+> summary(pois)
+
+Call:
+glm(formula = Y ~ X1 + X2 + X3 + X4 + X5, family = poisson, data = data)
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  6.248e+00  1.855e-01  33.676  < 2e-16 ***
+X1          -4.283e-04  2.332e-05 -18.366  < 2e-16 ***
+X2          -1.644e-02  2.072e-03  -7.933 2.13e-15 ***
+X3          -1.574e-02  6.768e-04 -23.258  < 2e-16 ***
+X4          -4.441e-04  9.113e-05  -4.873 1.10e-06 ***
+X5           3.875e-06  1.836e-07  21.098  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 2138.1  on 34  degrees of freedom
+Residual deviance:  926.6  on 29  degrees of freedom
+AIC: 1109.5
+
+Number of Fisher Scoring iterations: 5
+
+> vif(pois)
+      X1       X2       X3       X4       X5 
+1.298598 1.517932 1.768037 1.370521 1.090390 
+> 
+> #Heterogenitas Spasial
+> library(zoo)
+> library(lmtest)
+> bptest(bineg)
+
+	studentized Breusch-Pagan test
+
+data:  bineg
+BP = 14.436, df = 5, p-value = 0.01306
+
+> 
+> #Dependensi Spasial
+> library(ape)
+> matriks=as.matrix(dist(cbind(data$Long, data$Lat)))
+> matriks.inv = 1/matriks
+> diag(matriks.inv)=0
+> MI=Moran.I(data$Y, matriks.inv)
+> I=MI$observed
+> E=MI$expected
+> SD=MI$sd
+> Z=(I-E)/SD
+> cat("\n Moran's I Test (Dependensi Spasial)\n")
+
+ Moran's I Test (Dependensi Spasial)
+> cat("ZI = ",Z,"\n")
+ZI =  5.805709 
+> cat("P-Value = ",MI$p.value)
+P-Value =  6.409429e-09> 
+> data <- read_excel("D://02_Work/06_Portfolio/04_GWNBR Kusta/Data Kusta.xlsx")
+> View(data)
+> 
+> #Jarak Euclidean
+> u = data[,8]
+> u = as.matrix(u) 
+> n = nrow(u)
+> v = data[,9]
+> v = as.matrix(v) 
+> library(fields)
+> jarak = matrix(nrow=35,ncol=35) 
+> for(i in 1:n)
++ {
++   for(j in 1:n)
++   {
++     jarak[i,j] = sqrt((u[i,]-u[j,])**2+(v[i,]-v[j,])**2)
++   }
++ }
+> write.table(jarak, file="D://02_Work/06_Portfolio/04_GWNBR Kusta/Data/jarak euclidean.csv", sep=",")
+> 
+> 
+> #Adaptive Bisquare
+> library(spgwr) 
+> bbis=ggwr.sel(Y~X1+X2+X3+X4+X5,data=data,coords=cbind(data$Long, data$Lat),adapt=TRUE,gweight=gwr.bisquare)
+Adaptive q: 0.381966 CV score: 83068.14 
+Adaptive q: 0.618034 CV score: 52000.7 
+Adaptive q: 0.763932 CV score: 56929.64 
+Adaptive q: 0.6519711 CV score: 53184.28 
+Adaptive q: 0.527864 CV score: 53285.13 
+Adaptive q: 0.5909442 CV score: 51521.81 
+Adaptive q: 0.5731234 CV score: 52312.21 
+Adaptive q: 0.5980896 CV score: 51346.4 
+Adaptive q: 0.6003144 CV score: 51323.55 
+Adaptive q: 0.6025704 CV score: 51363.12 
+Adaptive q: 0.6000293 CV score: 51319.47 
+Adaptive q: 0.5996067 CV score: 51323.99 
+Adaptive q: 0.5999694 CV score: 51319.43 
+Adaptive q: 0.5999287 CV score: 51319.93 
+Adaptive q: 0.5999694 CV score: 51319.43 
+> banbis=ggwr(Y~X1+X2+X3+X4+X5,data=data,coords=cbind(data$Long,data$Lat),adapt=bbis,gweight=gwr.bisquare)
+> banbis$bandwidth
+ [1] 1.5820121 1.2734846 1.1375333 0.8407670 0.9567010 0.9235010 0.8703839 0.8439479 0.9163516 0.9516210 0.9869072 1.1480190 0.9972889
+[14] 0.9615965 0.8668023 1.3474494 1.4322151 1.1744960 1.0125800 1.0981679 0.8703467 0.7431593 0.8139303 0.8800201 0.9081334 0.9572664
+[27] 1.2008758 1.4118625 1.5327147 0.8027842 0.9419498 0.7898718 0.8170167 0.9759789 1.4370523
+> bbis
+[1] 0.5999694
+> 
+> #Adaptive Gaussian
+> library(spgwr) 
+> bgaus=ggwr.sel(Y~X1+X2+X3+X4+X5,data=data,coords=cbind(data$Long,data$Lat),adapt=TRUE,gweight=gwr.Gauss) 
+Adaptive q: 0.381966 CV score: 77365.44 
+Adaptive q: 0.618034 CV score: 96820.7 
+Adaptive q: 0.236068 CV score: 48780.62 
+Adaptive q: 0.145898 CV score: 44572.19 
+Adaptive q: 0.1540726 CV score: 44312.65 
+Adaptive q: 0.1665832 CV score: 43981.19 
+Adaptive q: 0.193124 CV score: 44745.8 
+Adaptive q: 0.1767209 CV score: 43946.47 
+Adaptive q: 0.1733336 CV score: 43888.7 
+Adaptive q: 0.1722166 CV score: 43880.03 
+Adaptive q: 0.1708919 CV score: 43888.02 
+Adaptive q: 0.172088 CV score: 43879.38 
+Adaptive q: 0.1718803 CV score: 43878.49 
+Adaptive q: 0.1715028 CV score: 43877.37 
+Adaptive q: 0.1710368 CV score: 43885.09 
+Adaptive q: 0.1713248 CV score: 43879.3 
+Adaptive q: 0.171632 CV score: 43877.68 
+Adaptive q: 0.1714348 CV score: 43877.24 
+Adaptive q: 0.1713928 CV score: 43877.94 
+Adaptive q: 0.1714348 CV score: 43877.24 
+> bangaus=ggwr(Y~X1+X2+X3+X4+X5,data=data,coords=cbind(data$Long,data$Lat),adapt= bgaus,gweight=gwr.Gauss)
+> bangaus$bandwidth
+ [1] 0.8548288 0.5348221 0.4891745 0.4658711 0.5635424 0.4472984 0.3953997 0.3918681 0.3866990 0.3918896 0.3154496 0.4309924 0.3671419
+[14] 0.4350298 0.4956912 0.7787485 0.7287093 0.4307790 0.5104668 0.5708426 0.4253876 0.3866863 0.3932016 0.5026135 0.4871820 0.4553386
+[27] 0.3485346 0.4642203 0.6115676 0.3866744 0.2735125 0.3852205 0.4635105 0.5246837 0.5607002
+> bgaus
+[1] 0.1714348
+> 
+> #Fixed Bisquare
+> library(spgwr) 
+> bfixgaus=ggwr.sel(Y~X1+X2+X3+X4+X5,data=data,coords=cbind(data$Long,data$Lat),adapt=FALSE,gweight=gwr.Gauss)
+Bandwidth: 1.031933 CV score: 85776.24 
+Bandwidth: 1.668036 CV score: 121980.3 
+Bandwidth: 0.6388002 CV score: 50662.5 
+Bandwidth: 0.3958305 CV score: 52174.4 
+Bandwidth: 0.5380302 CV score: 48236.17 
+Bandwidth: 0.5319166 CV score: 48255.71 
+Bandwidth: 0.5412355 CV score: 48233.17 
+Bandwidth: 0.5415619 CV score: 48233.15 
+Bandwidth: 0.5415212 CV score: 48233.15 
+Bandwidth: 0.5414806 CV score: 48233.15 
+Bandwidth: 0.5415212 CV score: 48233.15 
+> bfixgaus
+[1] 0.5415212
+> 
+> #Fixed Gaussian
+> library(spgwr) 
+> bfixbis=ggwr.sel(Y~X1+X2+X3+X4+X5,data=data,coords=cbind(data$Long,data$Lat),adapt=FALSE,gweight=gwr.bisquare)
+Bandwidth: 1.031933 CV score: 59652.81 
+Bandwidth: 1.668036 CV score: 53157.84 
+Bandwidth: 2.06117 CV score: 67719.74 
+Bandwidth: 1.461189 CV score: 52644.04 
+Bandwidth: 1.522616 CV score: 52212.92 
+Bandwidth: 1.545606 CV score: 52176.87 
+Bandwidth: 1.546255 CV score: 52176.59 
+Bandwidth: 1.550434 CV score: 52175.79 
+Bandwidth: 1.550252 CV score: 52175.79 
+Bandwidth: 1.550185 CV score: 52175.79 
+Bandwidth: 1.550144 CV score: 52175.79 
+Bandwidth: 1.550185 CV score: 52175.79 
+> bfixbis
+[1] 1.550185
+> 
+> #Matriks Pembobot
+> bobot = matrix(nrow=35,ncol=35) 
+> for(i in 1:35)
++ {
++   for(j in 1:35)
++   {
++     bobot[i,j] = (exp(-1/2*(jarak[i,j]/(bfixgaus)**2)))
++   }
++ }
+> write.table(jarak, file="D://02_Work/06_Portfolio/04_GWNBR Kusta/Data/Matriks Pembobot Fix Gaussian.csv", sep=",")
+> 
+> #Estimasi Parameter Model GWNBR
+> g=function(X,y,W,phi,b)
++ {
++   betalama=c(phi,b) 
++   beta=matrix(0,27,7,byrow=T) 
++   beta[1,]=betalama 
++   epsilon=0.00000001
++   i=2 
++   repeat
++   {
++     phi=betalama[1] 
++     bxx=betalama[-1] 
++     satu=rep(1,35) 
++     X=cbind(satu,data[,3:7])
++     Xb=as.matrix(X)%*%as.matrix(bxx) 
++     miu=exp(Xb)
++     delta1=((log(1+phi*miu)-digamma(y+(1/phi))+digamma(1/phi))/phi^2)+((y- miu)/((1+phi*miu)*phi))
++     delta1=as.matrix(delta1) 
++     p1=t(satu)%*%W%*%delta1 
++     delta2=(y-miu)/(1+phi*miu) 
++     delta2=as.matrix(delta2)
++     p2=t(X)%*%as.matrix(W)%*%delta2 
++     p2=as.matrix(p2)
++     gt=rbind(p1,p2)
++     delta3=((trigamma(y+(1/phi))-trigamma(1/phi))/phi^4)+((2*digamma(y+(1/phi))-2*digamma(1/phi)- 2*log(1+phi*miu))/phi^3)+((2*miu)/(phi^2*(1+phi*miu)))+(((y+(1+phi))*miu^2)/(1+phi*miu)^2)-(y/phi^2)
++     delta3=as.matrix(delta3) 
++     p3=t(satu)%*%W%*%delta3 
++     p3=as.matrix(p3)
++     delta4=miu*(miu-y)/(1+phi*miu)^2 
++     delta4=as.matrix(delta4) 
++     p4=t(X)%*%W%*%delta4 
++     p4=as.matrix(p4)
++     h1=rbind(p3,p4) 
++     delta5=miu*(phi*y+1)/(1+phi*miu)^2 
++     delta5=t(delta5)
++     delta5=c(delta5) 
++     delta5=as.matrix(diag(delta5))
++     p5=t(X)%*%as.matrix(W)%*%delta5%*%as.matrix(X) 
++     p5=-1*p5
++     p5=as.matrix(p5) 
++     h2=rbind(t(p4),p5) 
++     H=cbind(h1,h2)
++     
++     delta6=miu*(phi*y+1)/(1+phi*miu)^2 
++     delta6=t(delta6)
++     delta6=c(delta6) 
++     delta6=as.matrix(diag(delta6))
++     p6=t(X)%*%as.matrix(W)%*%delta6%*%as.matrix(X) 
++     p6=-1*p6
++     p6=as.matrix(p6) 
++     h3=rbind(t(p5),p6) 
++     
++     
++     HI=ginv(H)
++     betabaru=betalama-(HI%*%gt) 
++     beta[i,]=betabaru 
++     eror=betabaru-betalama
++     if(max(abs(eror))<=epsilon|i>=35) break; 
++     betalama=betabaru
++     i=i+1
++   }
++   beta=beta[1:i,] 
++   return(list(beta=beta,hessian=H))
++ }
+> gwnbr=function(x,y,W,teta)
++ {
++   beta=as.matrix(bineg$coefficients) 
++   p=matrix(c(0),nrow(x),ncol(x)+1,byrow=T)
++   zhit=matrix(c(0),nrow(x),ncol(x),byrow=T) 
++   for(i in 1:35)
++   {
++     w=as.matrix(diag(W[i,])) 
++     hit=g(x,y,w,teta,beta) 
++     parameter=hit$beta 
++     n=nrow(parameter) 
++     p[i,]=parameter[n,]
++     write.csv(hit$hessian,file=paste("matriks hessian",i,".csv")) 
++     invh=-ginv(as.matrix(hit$hessian))
++     for(j in 1:ncol(x))
++     {
++       zhit[i,j]=p[i,j+1]/invh[j+1,j+1]
++     }
++   }
++   return(list(koefisien=p,zhitung=zhit,parameter=parameter))
++ }
+> 
+> # Debugging prints
+> cat("Iteration:", i, "\n")
+Iteration: 35 
+
+
+> #Memanggil Program GWNBR
+> w=bobot 
+> x=data[,3:7] 
+> y=data[,2] 
+> satu=rep(1,35)
+> x=as.matrix(cbind(satu,x)) 
+> phi=bineg$theta
+> est=gwnbr(x,y,w,phi) 
+> est$zhitung
+             [,1]       [,2]        [,3]      [,4]         [,5]      [,6]
+ [1,] 17164796078  -5471.671  -51634.550 -319.3400 -473.8462680 304703.24
+ [2,] 27448566833  -9180.439 -109278.326 -512.9291 -499.9658076 483690.83
+ [3,] 31985343744 -10598.493 -115495.076 -605.2239 -488.3230300 514681.26
+ [4,] 40236832104 -14147.939  -79976.053 -787.7151 -492.7763822 485940.58
+ [5,] 32932062911 -11454.432  -57140.006 -651.2847 -313.4967228 374691.05
+ [6,] 34651999601 -17217.800  -40925.237 -693.7255 -336.7013933 329678.08
+ [7,] 44586589972 -18111.199  -74177.760 -814.1505 -590.6023718 471851.41
+ [8,] 39768177598 -23638.686  -41353.651 -726.1662 -365.1060469 330505.73
+ [9,] 32860228493 -23691.405  -24858.795 -582.6084 -212.1551716 202267.96
+[10,] 27538241143 -20619.290  -21904.022 -501.6367 -174.5211965 172520.12
+[11,] 23141563001 -18779.291  -18094.365 -404.0994  -52.9443086  87982.76
+[12,] 18435665368 -14353.822  -14575.593 -319.4935  -30.1195924  51464.92
+[13,] 21593498302 -17713.268  -16951.363 -381.0296   -0.9886492  65867.08
+[14,] 19844383778 -15998.874  -15847.271 -364.0844   12.7731370  68704.40
+[15,] 25902455026 -15182.248  -22643.484 -452.8204   40.9477469 105444.80
+[16,]  9263670233  -7357.022   -8382.892 -202.2183   98.4488043  10865.52
+[17,] 10304431605  -6435.393   -9915.136 -227.3793   86.8428945  11740.28
+[18,] 17554931470  -9707.846  -16965.654 -334.5781  132.2512509  55221.73
+[19,] 26917007468 -12547.774  -26647.430 -448.0894  125.4421530 101713.86
+[20,] 28077450977 -10505.415  -32291.482 -430.0517   99.2438041 129952.14
+[21,] 40249589405 -15620.433  -40478.708 -610.5163   54.1118478 182029.21
+[22,] 68491145368 -22199.167  -62457.107 -900.8892 -243.6945088 321873.28
+[23,] 52348781083 -23752.949  -60273.464 -844.6421 -499.4154015 413693.49
+[24,] 53917156663 -17159.438  -85041.217 -750.0454 -299.3311529 355959.09
+[25,] 49468174361 -14739.918 -990917.282 -728.4513 -423.0823189 506303.67
+[26,] 42815170163 -14268.896 -368105.907 -710.3747 -495.5496285 580142.26
+[27,] 34617012663 -13284.804 -498831.183 -569.4923 -426.1802417 652404.34
+[28,] 29127822987 -12199.932 -317466.116 -482.0717 -433.6116296 702993.97
+[29,] 25302091962 -11632.334 -467973.850 -401.2708 -360.5809613 678674.66
+[30,] 44250191288 -26701.008  -45869.925 -779.9871 -419.4647762 370036.00
+[31,] 25421923936 -21597.874  -19618.549 -447.2663  -63.7690141 107652.32
+[32,] 46763759768 -26064.300  -39379.187 -744.5098 -267.8518573 287026.30
+[33,] 55981798371 -18949.083  -61193.937 -804.4152 -137.9833445 297735.31
+[34,] 46008506115 -14815.723 -855610.107 -696.0671 -421.8762087 530775.97
+[35,] 28141947204 -13791.476 -454667.434 -450.1053 -379.0022903 672682.00
+> est$koefisien
+          [,1]     [,2]          [,3]        [,4]         [,5]          [,6]         [,7]
+ [1,] 1.492087 6.510317 -0.0002845169 -0.02233851 -0.015218269 -1.101485e-03 4.255550e-06
+ [2,] 1.492087 6.510316 -0.0002815823 -0.02232475 -0.015277653 -9.493492e-04 4.260619e-06
+ [3,] 1.492086 6.510317 -0.0002839124 -0.02232737 -0.015152985 -9.317470e-04 4.136877e-06
+ [4,] 1.492086 6.510318 -0.0003068935 -0.02232562 -0.014533696 -9.652331e-04 3.758052e-06
+ [5,] 1.492086 6.510318 -0.0003208462 -0.02234076 -0.014570508 -6.620587e-04 3.204612e-06
+ [6,] 1.492085 6.510319 -0.0003700531 -0.02230257 -0.014106445 -7.743466e-04 3.150402e-06
+ [7,] 1.492086 6.510319 -0.0003335681 -0.02231278 -0.014320494 -1.080640e-03 3.688565e-06
+ [8,] 1.492085 6.510321 -0.0003924967 -0.02221099 -0.013515855 -7.626603e-04 2.911762e-06
+ [9,] 1.492087 6.510325 -0.0003875389 -0.02194858 -0.012112012 -4.462785e-04 1.910372e-06
+[10,] 1.492086 6.510325 -0.0003833884 -0.02198364 -0.012284531 -4.297198e-04 1.848208e-06
+[11,] 1.492091 6.510327 -0.0003612715 -0.02183381 -0.011502623 -1.389545e-04 1.024450e-06
+[12,] 1.492093 6.510327 -0.0003526597 -0.02177917 -0.011211094 -9.479208e-05 7.133823e-07
+[13,] 1.492092 6.510328 -0.0003549956 -0.02177238 -0.011243305 -2.558086e-06 7.778188e-07
+[14,] 1.492093 6.510328 -0.0003599708 -0.02171517 -0.010999798  3.112136e-05 8.379440e-07
+[15,] 1.492091 6.510328 -0.0003664149 -0.02176273 -0.011154241  7.078438e-05 9.722112e-07
+[16,] 1.492100 6.510336 -0.0003564662 -0.02126626 -0.009352249  3.508621e-04 2.010711e-07
+[17,] 1.492100 6.510337 -0.0003541548 -0.02123441 -0.009209816  2.878593e-04 2.014101e-07
+[18,] 1.492094 6.510331 -0.0003588460 -0.02161305 -0.010491263  2.622762e-04 6.204162e-07
+[19,] 1.492092 6.510328 -0.0003608505 -0.02179133 -0.011158719  2.133027e-04 8.463247e-07
+[20,] 1.492089 6.510326 -0.0003484805 -0.02190264 -0.011648077  1.851842e-04 1.154939e-06
+[21,] 1.492089 6.510326 -0.0003595244 -0.02189744 -0.011698188  8.342651e-05 1.141630e-06
+[22,] 1.492086 6.510324 -0.0003733740 -0.02202250 -0.012336068 -3.948193e-04 1.950419e-06
+[23,] 1.492085 6.510321 -0.0003722280 -0.02220997 -0.013501818 -8.584662e-04 3.001017e-06
+[24,] 1.492085 6.510323 -0.0003323013 -0.02211156 -0.012783382 -5.280462e-04 2.288444e-06
+[25,] 1.492085 6.510320 -0.0002592143 -0.02221542 -0.014051294 -1.001592e-03 3.777471e-06
+[26,] 1.492085 6.510318 -0.0002627661 -0.02225380 -0.014601586 -1.087845e-03 4.184689e-06
+[27,] 1.492086 6.510317 -0.0002629261 -0.02224833 -0.014999923 -1.161914e-03 4.683900e-06
+[28,] 1.492086 6.510317 -0.0002696029 -0.02226104 -0.015272306 -1.148901e-03 4.743318e-06
+[29,] 1.492086 6.510317 -0.0002691642 -0.02223231 -0.015066325 -1.122180e-03 4.637968e-06
+[30,] 1.492085 6.510321 -0.0003949487 -0.02220661 -0.013481851 -7.994342e-04 2.972880e-06
+[31,] 1.492090 6.510327 -0.0003634520 -0.02183469 -0.011569680 -1.508862e-04 1.166347e-06
+[32,] 1.492086 6.510324 -0.0003966518 -0.02203132 -0.012461755 -4.767964e-04 2.153504e-06
+[33,] 1.492087 6.510325 -0.0003591547 -0.02198423 -0.012083727 -2.189727e-04 1.607767e-06
+[34,] 1.492085 6.510319 -0.0002503902 -0.02222344 -0.014283455 -1.031870e-03 3.958155e-06
+[35,] 1.492086 6.510317 -0.0002695708 -0.02223951 -0.015077295 -1.134454e-03 4.678774e-06
+> write.table(est$zhitung, file="D://02_Work/06_Portfolio/04_GWNBR Kusta/Data/Z.csv", sep=",")
+> write.table(est$koefisien, file="D://02_Work/06_Portfolio/04_GWNBR Kusta/Data/Koef.csv", sep=",")
+> 
+> #Menghitung Nilai Likelihood Ratio (Uji Serentak) 
+> datay=as.matrix(data[,2]) 
+> datax=as.matrix(cbind(satu,data[,3:7])) 
+> tetagw=as.matrix(est$koefisien[,1]) 
+> betagw=as.matrix(est$koefisien[,2:7]) 
+> slr=matrix(0,nrow(data),1)
+> for(i in 1:nrow(data))
++ {
++   slr[1]=0
++   for(r in 0:(datay[i]-1))
++   {slr[i]=slr[i]+log(r+(1/tetagw[i]))}
++ }
+> muwgw=as.matrix(exp(est$koefisien[,2])) 
+> muogw=as.matrix(exp(apply(datax*betagw,1,sum))) 
+> Lwgw=sum(slr-lgamma(datay+1)+datay*log(tetagw*muwgw)-(datay+(1/tetagw))*log(1+tetagw*muwgw))
+> Logw=sum(slr-lgamma(datay+1)+datay*log(tetagw*muogw)-(datay+(1/tetagw))*log(1+tetagw*muogw))
+> LR=2*(Logw-Lwgw) 
+> LR
+[1] 107.782
+> 
+> #Menghitung Nilai Devian Model GWNBR 
+> mutopi=as.matrix(exp(apply(datax*betagw,1,sum))) 
+> DGW1=matrix(0,nrow(data),1)
+> for(i in 1:nrow(data))
++ {
++   DGW1[i]=(datay[i]*log(datay[i]/mutopi[i]))-(datay[i]+(1/tetagw[i]))*log((1+tetagw[i]*datay[i])/(1+tetagw[i]*mutopi[i]))
++ }
+> DGW=bobot%*%DGW1 
+> devian=sum(DGW) 
+> devian
+[1] 55.02932
+> mutopi
+            [,1]
+ [1,]  27.634346
+ [2,]  20.879007
+ [3,] 114.811683
+ [4,]  12.983805
+ [5,]  62.989650
+ [6,]  11.959178
+ [7,]  15.532156
+ [8,]  12.946517
+ [9,]  14.163403
+[10,]  23.609931
+[11,]  28.842646
+[12,]  68.749887
+[13,]  37.875880
+[14,]  24.735133
+[15,]  23.721497
+[16,]  45.637328
+[17,]  32.615332
+[18,]  37.643665
+[19,]  35.325793
+[20,]  65.787188
+[21,]  43.625850
+[22,]   1.788949
+[23,]   8.859910
+[24,]  21.833982
+[25,]  30.795227
+[26,]  67.213259
+[27,]  94.502247
+[28,] 213.826905
+[29,] 310.110618
+[30,]   6.104493
+[31,]   4.068378
+[32,]  44.452200
+[33,]  27.863520
+[34,]  22.113943
+[35,]  29.890439
+> 
+> #Pengujian Kesesuaian Model 
+> df=nrow(data)-(ncol(datax)+1) 
+> fhit=(bineg$deviance/df)/(devian/df) 
+> fhit
+[1] 0.6867995
+> qf(0.95,29,29)
+[1] 1.860811
+> 
+> #Menghitung Nilai AIC Model GWNBR 
+> ssegw=sum((datay-muogw)^2) 
+> n=nrow(data)
+> k=ncol(datax)+2 
+> a=log(ssegw/n) 
+> b=2*k 
+> aicgw=(n*a)+b 
+> aicgw
+[1] 244.262
+> 
