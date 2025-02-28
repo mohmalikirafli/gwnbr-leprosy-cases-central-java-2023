@@ -3,6 +3,9 @@
 ## Table of Contents
 
 - [File Structures](##File-Structures)
+- [Project Overview](##project-overview)
+- [Data Sources](##data-sources)
+- [Recommendations](##recommendations)
 
 ## File Structures
 ```
@@ -26,4 +29,15 @@
 ├── Syntax GWNBR.R
 ├── Syntax Statistika Deskriptif.R
 └── Syntax Uji Asumsi Spasial.R
+```
+
+## Project Overview
+```
+
+## Data Sources
+```
+
+## Recommendations
+```
+## File Structures
 ```
