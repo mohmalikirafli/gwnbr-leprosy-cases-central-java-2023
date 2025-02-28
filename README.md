@@ -2,10 +2,10 @@
 
 ## Table of Contents
 
-- [File Structures](##File-Structures)
-- [Project Overview](##project-overview)
-- [Data Sources](##data-sources)
-- [Recommendations](##recommendations)
+- [File Structures](#File-Structures)
+- [Project Overview](#project-overview)
+- [Data Sources](#data-sources)
+- [Recommendations](#recommendations)
 
 ## File Structures
 ```
