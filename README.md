@@ -2,7 +2,6 @@
 This project performs spatial assumption tests on a **Geographically Weighted Negative Binomial Regression (GWNBR)** model using R. It analyzes spatial dependencies, heteroscedasticity, and spatial heterogeneity of the data, applying various statistical models to the dataset related to leprosy research in Central Java Province.
 
 ## Table of Contents
-
 - [File Structures](#file-structures)
 - [Project Overview](#project-overview)
 - [Data Sources](#data-sources)
@@ -30,10 +29,12 @@ This project performs spatial assumption tests on a **Geographically Weighted Ne
 │   ├── Output dari Syntax
 │   ├── Z.csv
 |   └── jarak euclidean fix.csv
-├── README.md
-├── Syntax GWNBR.R
-├── Syntax Statistika Deskriptif.R
-└── Syntax Uji Asumsi Spasial.R
+├── Syntax Program R
+|   ├── Syntax GWNBR.R
+|   ├── Syntax Statistika Deskriptif.R
+|   └── Syntax Uji Asumsi Spasial.R
+├── LICENSE
+└── README.md
 ```
 
 ## Project Overview
@@ -43,27 +44,27 @@ The goal is to provide a spatially aware analysis that identifies key factors im
 
 ## Data Sources
 _Leprosy cases in Central Java Province for the year 2023. Source: [Profil Kesehatan Jawa Tengah 2023](https://dinkesjatengprov.go.id/v2018/dokumen/1Profil_Kesehatan_2023/files/downloads/Profil%20Kesehatan%20Jawa%20Tengah%202023.pdf)_
-- Y: Leprosy Cases
+- **Y: Leprosy Cases**
   - Definition: This dependent variable represents the number of registered leprosy cases, both old and new, in Central Java Province. The data is used to analyze the factors influencing the number of leprosy cases based on independent variables.
   - Data Source: Secondary data from the Profil Kesehatan Jawa Tengah 2023 publication.
   - Data Scale: Ratio (count of cases).
-- X1: Population Density
+- **X1: Population Density**
   - Definition: This independent variable measures the number of people per square kilometer in Central Java Province, categorized by district/city. Population density is often used as an indicator to analyze the spread of diseases in more densely populated areas.
   - Data Source: Secondary data from the Profil Kesehatan Jawa Tengah 2023 publication.
   - Data Scale: Ratio (people per square kilometer).
-- X2: Healthy Housing
+- **X2: Healthy Housing**
   - Definition: This variable measures the percentage of households or Family Cards (Kartu Keluarga, KK) with access to healthy housing in Central Java Province, by district/city. Healthy housing conditions can influence the spread of diseases like leprosy.
   - Data Source: Secondary data from the Profil Kesehatan Jawa Tengah 2023 publication.
   - Data Scale: Ratio (percentage of households with healthy housing).
-- X3: Safe Drinking Water
+- **X3: Safe Drinking Water**
   - Definition: This variable measures the availability of safe drinking water facilities (monitored and/or safe) in Central Java Province, by district/city. Access to safe drinking water is a crucial factor in preventing disease, including leprosy.
   - Data Source: Secondary data from the Profil Kesehatan Jawa Tengah 2023 publication.
   - Data Scale: Ratio (percentage of access to safe drinking water).
-- X4: Safe Public Places and Facilities (TFU)
+- **X4: Safe Public Places and Facilities (TFU)**
   - Definition: This variable represents the number of public places and facilities (TFU) in Central Java Province that have been properly monitored and meet safety and hygiene standards, categorized by district/city. Proper monitoring of public places is essential to reduce the risk of disease transmission.
   - Data Source: Secondary data from the Profil Kesehatan Jawa Tengah 2023 publication.
   - Data Scale: Ratio (number of public places and facilities under safety inspection).
-- X5: Adequate Sanitation
+- **X5: Adequate Sanitation**
   - Definition: This variable measures the percentage of households or Family Cards (Kartu Keluarga, KK) with access to adequate sanitation facilities in Central Java Province, by district/city. Proper sanitation is critical in preventing the spread of diseases like leprosy.
   - Data Source: Secondary data from the Profil Kesehatan Jawa Tengah 2023 publication.
   - Data Scale: Ratio (percentage of households with access to adequate sanitation).
